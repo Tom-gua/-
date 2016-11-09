@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>weibo</title>
+        <script src='http://cdn.bootcss.com/jquery/3.1.1/jquery.js'></script>
+        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+        <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" media="screen" title="no title">
+        <link rel="stylesheet" href="space.css" media="screen" title="no title">
+    </head>
+    <body>
+        <div class="gua-input-name vertical-center click-left-arrow">
+            <div class="gua-left vertical-center">
+                <span class='l-arrow gua-left-arrow'>&gt;</span>
+            </div>
+            <input class='gua-inputName-area vertical-center'type="text" name="name" value="" placeholder="姓名">
+        </div>
+            <div class="gua-select-img vertical-center">
+                <div class="gua-right vertical-center">
+                    <span class='r-arrow gua-right-arrow'>&lt;</span>
+                </div>
+                <div class="gua-picture">
+                    <img class='gua-imgs img-circle' src="2.jpg"  alt="" />
+                    <img class='gua-imgs img-circle' src="5.jpg"  alt="" />
+                    <img class='gua-imgs img-circle' src="6.jpg"  alt="" />
+                    <img class='gua-imgs img-circle' src="7.jpg"  alt="" />
+                </div>
+            </div>
+        <div class="gua-main">
+            <h1 class="gua-name">心情分享站</h1>
+            <div class="gua-write">
+                <textarea class='gua-text'name="name" maxlength='140' onpropertychange="if(value.lenght>100) value=value.slice(0,140)" ></textarea>
+                <div class="gua-submit">
+                    <div class="gua-submit-message">
+                        <p class="gua-message">
+                            还能输入<span class="gua-number">140</span>个字
+                        </p>
+                        <button class='gua-submit-button btn btn-success 'type="button" name="button">提交</button>
+                    </div>
+                </div>
+                <hr class="gua-line"/>
+            </div>
+            <div class="gua-all-comment">
+            </div>
+        </div>
+    </body>
+    <script src='space.js'></script>
+</html>

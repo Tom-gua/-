@@ -1,0 +1,167 @@
+body{
+    background-color: #b4daf0;
+    background-image: url("weibo-background.png");
+    background-repeat: repeat-x;
+    background-position: center 0;
+}
+.gua-main{
+    position: relative;
+    width: 600px;
+    margin: 0 auto;
+    top: 50px;
+}
+.gua-name{
+    margin-bottom: 40px;
+    font-style: italic;
+    color: white;
+    text-align: center;
+}
+.gua-write{
+    position: relative;
+    top: 0px;
+}
+.gua-text{
+    width: 600px;
+    height: 100px;
+    resize: none;
+    border-radius: 4px;
+
+}
+.gua-submit-message{
+    position: relative;
+    right: 0;
+    bottom: -15px;
+}
+.gua-message{
+    position: absolute;
+    display: inline-block;
+    right: 95px;
+    top: 0px;
+    font-size: 16px;
+}
+.gua-number{
+    font-style: oblique;
+    font-size: 30px;
+    color: red;
+}
+.gua-submit-button{
+    position: absolute;
+    right: 0px;
+    width: 80px;
+}
+.gua-line{
+    position: relative;
+    top: 50px;
+    padding: 0px;
+}
+.gua-all-comment{
+    position: relative;
+    height: 100%;
+    top: 40px;
+
+}
+.gua-comment-main{
+    position: relative;
+    background: white;
+    border-radius: 5px;
+    top:10px;
+}
+.gua-picture{
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+}
+.vertical-center{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.gua-imgs{
+    display: block;
+    margin-bottom: 10px;
+    width: 70px;
+    height: 70px;
+}
+.gua-comment{
+    position: relative;
+    top: 10px;
+}
+.gua-information{
+    position: absolute;
+    top: 5px;
+    left: 80px;
+}
+.gua-content{
+    position: relative;
+    top: 3px;
+}
+.gua-date{
+    font-size: 14px;
+    position: absolute;
+    top: 55px;
+    width: 120px;
+}
+.gua-dash-line{
+    border-style: dashed;
+    border-width: thin;
+    color: lightgray;
+    margin: 10px;
+}
+.gua-left{
+    position: absolute;
+    font-size: 40px;
+    color: white;
+    height: 45px;
+    background: #6B6B6B;
+}
+.gua-left-arrow {
+    position: relative;
+    top: -12px;
+}
+.gua-right-arrow{
+    position: relative;
+    top: -12px;
+}
+.gua-right{
+    position: absolute;
+    right: 80px;
+    height: 45px;
+    font-size: 40px;
+    color: white;
+    background: #6B6B6B;
+}
+.gua-right:hover{
+    cursor: pointer;
+}
+.gua-left:hover{
+    cursor: pointer;
+}
+.gua-inputName-area{
+    position: absolute;
+    top: 50%;
+    width: 200px;
+    left: -200px;
+    height: 45px;
+}
+.gua-select-img{
+    right: -80px;
+}
+.l-arrow{
+    position: relative;
+    top: -10px;
+}
+.r-arrow{
+    position: relative;
+    top: -10px;
+}
+.gua-delete{
+    position: relative;
+    left: 560px;
+    color: red;
+    font-size: 15px;
+}
+.gua-delete:hover{
+    cursor: pointer;
+}
