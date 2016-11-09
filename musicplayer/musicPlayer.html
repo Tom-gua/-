@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <script src='http://cdn.bootcss.com/jquery/3.1.1/jquery.js'></script>
+        <title>music player</title>
+        <style media="screen">
+            body{
+                margin: 0;
+            }
+            .gua-container{
+                position: absolute;
+                margin: 0 auto;
+                top: 50px;;
+                left: 50%;
+                width: 70%;
+                height: 80%;
+                border-radius: 5px;
+                background: lightgray;
+                background-image: url(img/bgimg.png);
+                background-size: cover;
+                background-repeat: no-repeat;
+                transform: translateX(-50%);
+            }
+            .player-controls{
+                position: absolute;
+                width: 100%;
+                height: 100%;
+            }
+            img{
+                width: 40px;
+                height: 40px;
+                margin: 10px 36px;
+                /*border-radius: 50%;
+                border: 1px solid black;*/
+            }
+            .player-list-item:hover{
+                cursor: pointer;
+            }
+            .player-slider{
+                position: relative;
+                top: 300px;
+                right: 50px
+            }
+            .left{
+                position: absolute;
+
+                left: 100px;
+            }
+            .right{
+                position: relative;
+
+                float: right;
+            }
+            song:hover{
+                cursor: pointer;
+            }
+            #id-input-slider:hover{
+                cursor: pointer;
+            }
+            #id-input-slider{
+                position: absolute;
+                width: 80%;
+                left: 140px;
+            }
+            .play-music-message{
+                position: relative;
+                height: 36px;
+            }
+            .center{
+                text-align: center;
+            }
+            .player-list-container{
+                display: none;
+                position: absolute;
+                bottom: 300px;
+                right: 0px;
+                font-size: 15px;
+                font-weight: bolder;
+                font-style: normal;
+                border-radius: 5px;
+            }
+
+            .player-list-item{
+                position: relative;
+                /*border-radius: 5px;*/
+                margin: 10px 0px;
+                text-align: left;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 200px;
+                border-bottom: 1px solid black;
+                background: white;
+            }
+            .player-play {
+                position: relative;
+                top: 330px;
+                left: 45px;
+            }
+            .player-play:hover{
+                cursor: pointer;
+            }
+            songList{
+                display: inline-block;
+                position: absolute;
+                left: 0;
+                top: 13px;
+            }
+            #id-img-close{
+                display: inline-block;
+                position: absolute;
+                right: -30px;
+                width: 20px;
+                height: 20px;
+            }
+            listHeader{
+                display: block;
+                position: relative;
+                top: -30px;
+            }
+            #id-input-volume{
+                width: 75px;
+                position: relative;
+                top: -20px;
+                right: 30px
+            }
+            #id-img-rotate{
+                position: absolute;
+                left: 35%;
+                width: 220px;
+                height: 220px;
+                top: 85px;
+            }
+            #id-img-list{
+                position: absolute;
+                right: 40px;
+            }
+        </style>
+        <link rel="stylesheet" href="slider-css.css" >
+        <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+        <script>
+            var log = function() {
+                console.log.apply(console, arguments)
+            }
+
+            var bindSwitch = function() {
+                var player = $('#id-audio-player')[0]
+                $('song').on('click', function(event){
+                    // 设置播放器的歌曲文件
+                    var target = $(event.target)
+                    var t = target.text()
+                    // 切换歌曲src
+                    player.src = t
+                    // 切换歌曲时,设置相对应的时间,由于加载延迟，所以需要在加载完成之后做
+                    // 设置当前歌曲信息
+                    $('#id-h1-music-information').text(t)
+                    // player.play()
+                    //
+                    // // 改变播放按钮的状态
+                    // var play = $('#id-img-play')
+                    // play.attr('src', 'img/暂停.png')
+                    // play.data('action', 'pause')
+                    $('#id-img-play').click()
+
+                })
+            }
+
+            var playerSetTime = function(value) {
+                var player = $('#id-audio-player')[0]
+                var percent = value / 100
+                var time = player.duration * percent
+                player.currentTime = time
+            }
+
+            var bindTimeSlider = function() {
+                $('#id-input-slider').on('change', function(event){
+                    log('拖动了滑条', typeof event.target.value)
+                    var value = event.target.value
+                    // 根据百分比设置当前的currentTime
+                    playerSetTime(parseInt(value))
+                })
+            }
+
+            var nchar = function(char, len) {
+                var s = ''
+                for (var i = 0; i < len; i++) {
+                    s += char
+                }
+                return s
+            }
+            var zFill = function(n, width) {
+                var s = String(n)
+                var len = s.length
+                return nchar('0', width-len) + s
+            }
+            var labelFromTime = function(time) {
+                var m = Math.floor(time / 60)
+                var minutes = zFill(m, 2)
+                var s = Math.floor(time % 60)
+                var seconds = zFill(s, 2)
+                return `${minutes}:${seconds}`
+            }
+
+
+            var playByLoop = function() {
+                // 列表循环播放
+                log('列表循环播放')
+                // 直接点击下一首就好
+                $('#id-img-next').click()
+            }
+            var playByRandom = function() {
+                // 随机播放
+                log('随机播放')
+                var allLength = $('song').length
+                var r = Math.random() * allLength
+                var index = parseInt(r, 10)
+                log('随机播放的index', index)
+                var source = $($('song')[index]).text()
+                // 设置播放歌曲的src
+                $('#id-audio-player')[0].src = source
+                $('#id-img-play').click()
+            }
+            var playBySingle = function() {
+                // 单曲循环
+                log('单曲循环')
+                var source = $('#id-h1-music-information').text()
+                // 设置播放歌曲的src
+                $('#id-audio-player')[0].src = source
+                $('#id-img-play').click()
+            }
+            // 根据设置的模式进行相应的设计
+            var PlayMusicByMode = function(mode) {
+                var playModel = {
+                    loop: playByLoop,
+                    random: playByRandom,
+                    single: playBySingle,
+                }
+                var play = playModel[mode]
+                play()
+            }
+
+            var bindAudioEvents = function() {
+                // 播放音乐时，实时绑定的事件
+                $('#id-audio-player').on('timeupdate', function(event){
+                    // 歌曲播放时，会调用这个这函数
+                    var player = event.target
+                    var percent = player.currentTime / player.duration
+                    // 歌曲播放后滑块根据百分比移动
+                    var slider = $('#id-input-slider')
+                    slider.val(percent * 100)
+                    // 当歌曲播放时候，改变 slider 轨道的颜色
+                    slider.css( 'background', `linear-gradient(to right, #059CFA, white ' + ${percent}white)`);
+                    // 设置当前时间也随着歌曲播放而变化
+                    var player = $('#id-audio-player')[0]
+                    var time = labelFromTime(player.currentTime)
+                    $('#id-time-current').text(time)
+                })
+                // 加载音乐之后，绑定的时间
+                $('#id-audio-player').on('canplay', function(event){
+                    var player = $('#id-audio-player')[0]
+                    // 滑条归位，时间重制
+                    $('#id-input-slider').val(0)
+                    var time = labelFromTime(player.duration)
+                    $('#id-time-current').text('0:00')
+                    $('#id-time-duration').text(time)
+                    // 加载完成之后设置
+                    setVolume()
+                })
+                // 音乐播放完成之后
+                $('#id-audio-player').on('ended', function(){
+                    // 设置滑块为初始位置
+                    $('#id-input-slider').val(0)
+                    // 设置currentTime
+                    $('#id-time-current').text('0:00')
+                    // 设置播放按钮
+                    var play = $('#id-img-play')
+                    play.attr('src', 'img/播放.png')
+                    play.data('action', 'play')
+                    //  根据点击的播放模式进行设置
+                    var mode = $('#id-img-mode').data('active')
+                    log('当前播放的模式是', mode)
+                    PlayMusicByMode(mode)
+                })
+            }
+
+            var itemfromList = function() {
+                var src = $('#id-h1-music-information').text()
+                var array = $('song')
+                for (var i = 0; i < array.length; i++) {
+                    var a = array[i]
+                    log('array[i]',array[i])
+                    var t = $(a).text()
+                    log('src', src)
+                    log('t', t)
+                    if (src == t) {
+                        return i
+                    }
+                }
+            }
+            var changeMusic = function(condition) {
+                log('点击了',condition)
+                // 获得当前播放在列表里的位置
+                var item = itemfromList()
+                var allLength = $('song').length
+                var m = (item + condition + allLength) % allLength
+                var source = $($('song')[m]).text()
+                // 切换歌曲信息
+                $('#id-h1-music-information').text(source)
+                // 切换歌曲src
+                var player = $('#id-audio-player')[0]
+                player.src = source
+                player.play()
+                // play 按钮切换状态
+                var play = $('#id-img-play')
+                play.attr('src', 'img/暂停.png')
+                play.data('action', 'pause')
+            }
+            var nextSong = function() {
+                log('点击了下一曲')
+                changeMusic(1)
+                // 音量
+                setVolume()
+            }
+
+            var preSong = function() {
+                log('点击了上一曲')
+                changeMusic(-1)
+                // 设置音量
+                setVolume()
+            }
+            var playSong = function(image) {
+                log('点击了播放')
+                image.data('action', 'pause')
+                image.attr('src', 'img/暂停.png')
+                $('#id-audio-player')[0].play()
+                // 设置播放的音量
+                setVolume()
+                // 动画
+                $('.img-circle').addClass('fa-spin')
+            }
+
+            var setVolume = function() {
+                // 获得当前音量的值
+                var v = $('#id-input-volume').val() *　0.01
+                log('v', v)
+                // 设置音量
+                $('#id-audio-player')[0].volume = v
+            }
+            var pauseSong = function(image) {
+                log('点击了停止一曲')
+                image.data('action', 'play')
+                $('#id-audio-player')[0].pause()
+                image.attr('src', 'img/播放.png')
+                // 动画
+                $('.img-circle').removeClass('fa-spin')
+            }
+
+            var setMode = function(image) {
+                log('点击了模式按钮')
+                var active = image.data('active')
+                if (active === 'loop') {
+                    image.data('active', 'single')
+                    image.attr('src', 'img/单曲循环.png')
+                } else if (active === 'random') {
+                    image.data('active', 'loop')
+                    image.attr('src', 'img/循环.png')
+                } else if (active === 'single') {
+                    image.data('active', 'random')
+                    image.attr('src', 'img/随机播放.png')
+                }
+            }
+
+            var showList = function() {
+                log('显示播放列表')
+                $('.player-list-container').show()
+            }
+
+            var setZeroVoice = function() {
+                log('设置音量为静音')
+                var v = $('#id-input-volume')[0].value
+                log('v', typeof v)
+                if (v == 0) {
+                    // 恢复图标状态
+                    $('#id-img-volum')[0].src = 'img/音量.png'
+                    //  恢复声音
+                    $('#id-audio-player')[0].volume = 0.5
+                    $('#id-input-volume')[0].value = 50
+                } else {
+                    // 设置为静音
+                    $('#id-audio-player')[0].volume = 0
+                    $('#id-input-volume')[0].value = 0
+                    // 设置为静音图标
+                    $('#id-img-volum')[0].src = 'img/静音.png'
+                }
+            }
+
+            var bindPlayEvents = function() {
+                $('.player-play').on('click', 'img', function(event){
+                    log('点击了按钮', event.target)
+                    var image = $(event.target)
+                    var type = image.data('action')
+                    // 注意 if 都可以用字典替代
+                    var actions = {
+                        pre: preSong,
+                        play: playSong,
+                        next: nextSong,
+                        pause: pauseSong,
+                        mode: setMode,
+                        list: showList,
+                        voice: setZeroVoice,
+                    }
+                    var action = actions[type]
+                    action(image)
+                })
+            }
+
+            var bindClosePLayList = function() {
+                $('#id-img-close').on('click', function(){
+                    console.log('点击了关闭列表按钮')
+                    $('.player-list-container').hide()
+                })
+            }
+
+            var bindVolumeEvents = function() {
+                $('#id-input-volume').on('change', function(event){
+                    var value = event.target.value
+                    // 百分比
+                    var percent = value / 100
+                    $('#id-audio-player')[0].volume = percent
+                    // 当音量为0 时，改变图标
+                    if (value == 0) {
+                        $('#id-img-volum')[0].src = 'img/静音.png'
+                    } else {
+                        $('#id-img-volum')[0].src = 'img/音量.png'
+                    }
+                })
+            }
+            var bindEvents = function() {
+                // 绑定点击歌曲事件
+                bindSwitch()
+                // 绑定滑条移动事件
+                bindTimeSlider()
+                // 绑定 audio 滑块根据歌曲播放滑动
+                bindAudioEvents()
+                // 绑定按钮点击事件
+                bindPlayEvents()
+                // 绑定点击关闭播放列表事件
+                bindClosePLayList()
+                // 绑定音量按钮事件
+                bindVolumeEvents()
+            }
+            // 没写循环的童鞋们  当audio标签有loop属性时，
+            // ended事件是不起作用的  你们写的时候注意一下
+            var __main = function() {
+                bindEvents()
+            }
+            $(document).ready(function() {
+                __main()
+            })
+        </script>
+    </head>
+    <body>
+        <div class="gua-container center">
+            <audio id=id-audio-player>
+                <source src="大野克夫.mp3">
+                <source src="Let It Be.mp3">
+            </audio>
+            <div class="player-controls">
+                <div class="play-music-message center">
+                    <h1 id=id-h1-music-information> </h1>
+                </div>
+                <img id=id-img-rotate  class='fa  img-circle' src="img/music.png" alt="" />
+                <div class="player-slider center">
+                    <time id='id-time-current' class='left'>0:00</time>
+                    <input id=id-input-slider type="range" value=0 min=0 max=100>
+                    <time id='id-time-duration' class='right'>2:15</time>
+                </div>
+                <div class="player-play center">
+                    <img id=id-img-playing src="img/播放中.png" data-action=playing />
+                    <img id=id-img-mode src="img/循环.png" data-action=mode data-active=loop />
+                    <img id=id-img-pre src="img/上一首.png" data-action=pre />
+                    <img id=id-img-play src="img/播放.png" data-action=play />
+                    <img id=id-img-next src="img/下一首.png" data-action=next />
+                    <img id=id-img-volum src="img/音量.png" data-action=voice />
+                    <input id=id-input-volume type="range" min=0 max=100 value=100>
+                    <img id=id-img-list src="img/播放列表.png" data-action=list />
+                </div>
+            </div>
+            <div class="player-list-container">
+                    <listHeader>
+                        <songList>歌曲列表</songList>
+                        <img  id=id-img-close src="img/关闭.png" alt="" />
+                    </listHeader>
+                    <div class='player-list-item'>
+                        <song>大野克夫.mp3</song>
+                    </div>
+                    <div class='player-list-item'>
+                        <song>Let It Be.mp3</song>
+                    </div>
+                    <div class='player-list-item'>
+                        <song>我的名字叫伊莲.mp3</song>
+                    </div>
+            </div>
+        </div>
+    </body>
+</html>
